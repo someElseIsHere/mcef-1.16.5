@@ -7,6 +7,11 @@ Chromium Version `100.0.4896`
 
 [My JCEF mirror](https://ds58-mcef-mirror.ewr1.vultrobjects.com/)
 
+# NEW PROJECT
+If you enjoy MCEF/WebDisplays, you may enjoy my latest project [CinemaMod](https://github.com/CinemaMod)
+
+It isn't released yet but feel free to try out test builds and join our community!
+
 # Currently supported platforms
 - Windows 10/11 64 bit
 - macOS (Intel-based Macs only)
