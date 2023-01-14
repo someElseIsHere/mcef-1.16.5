@@ -14,5 +14,5 @@ It isn't released yet but feel free to try out test builds and join our communit
 
 # Currently supported platforms
 - Windows 10/11 64 bit
-- macOS (Intel-based Macs only)
+- macOS (Intel & Apple Silicon through Rosetta 2)
 - Linux 64 bit (tested on Fedora 34 and Ubuntu 20.04)
