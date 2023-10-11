@@ -18,8 +18,9 @@
  *     USA
  */
 
-package com.cinemamod.mcef;
+package com.cinemamod.mcef.listeners;
 
+@FunctionalInterface
 public interface MCEFCursorChangeListener {
     void onCursorChange(int cursorID);
 }

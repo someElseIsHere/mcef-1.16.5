@@ -20,10 +20,12 @@
 
 package com.cinemamod.mcef;
 
+import com.cinemamod.mcef.listeners.MCEFInitListener;
 import org.cef.misc.CefCursorType;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -36,6 +38,12 @@ public final class MCEF {
     private static MCEFApp app;
     private static MCEFClient client;
 
+    private static final ArrayList<MCEFInitListener> awaitingInit = new ArrayList<>();
+    
+    public static void scheduleForInit(MCEFInitListener task) {
+        awaitingInit.add(task);
+    }
+    
     public static MCEFSettings getSettings() {
         if (settings == null) {
             settings = new MCEFSettings();
@@ -56,8 +64,12 @@ public final class MCEF {
         if (CefUtil.init()) {
             app = new MCEFApp(CefUtil.getCefApp());
             client = new MCEFClient(CefUtil.getCefClient());
+            awaitingInit.forEach(t -> t.onInit(true));
+            awaitingInit.clear();
             return true;
         }
+        awaitingInit.forEach(t -> t.onInit(false));
+        awaitingInit.clear();
         return false;
     }
 
