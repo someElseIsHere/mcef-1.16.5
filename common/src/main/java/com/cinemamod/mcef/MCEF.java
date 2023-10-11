@@ -55,10 +55,10 @@ public final class MCEF {
         }
         return settings;
     }
-
+    
     /**
-     * This gets called by {@link com.cinemamod.mcef.mixins.CefInitMixin}
-     * There is no need to call this from your project.
+     * This gets called by {@link com.cinemamod.mcef.mixins.CefInitMixin} or {@link com.cinemamod.mcef.internal.MCEFDownloaderMenu}
+     * This should not be called from anything either than those.
      */
     public static boolean initialize() {
         if (CefUtil.init()) {
@@ -66,10 +66,12 @@ public final class MCEF {
             client = new MCEFClient(CefUtil.getCefClient());
             awaitingInit.forEach(t -> t.onInit(true));
             awaitingInit.clear();
+            System.out.println("Chromium Embedded Framework initialized");
             return true;
         }
         awaitingInit.forEach(t -> t.onInit(false));
         awaitingInit.clear();
+        System.out.println("Could not initialize Chromium Embedded Framework");
         return false;
     }
 

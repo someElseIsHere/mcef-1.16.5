@@ -25,7 +25,13 @@ import org.cef.CefApp;
 import org.cef.CefClient;
 import org.cef.CefSettings;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 public final class CefUtil {
     private CefUtil() {
@@ -34,11 +40,47 @@ public final class CefUtil {
     private static boolean init;
     private static CefApp cefAppInstance;
     private static CefClient cefClientInstance;
+    
+    private static void setUnixExecutable(File file) {
+        Set<PosixFilePermission> perms = new HashSet<>();
+        perms.add(PosixFilePermission.OWNER_READ);
+        perms.add(PosixFilePermission.OWNER_WRITE);
+        perms.add(PosixFilePermission.OWNER_EXECUTE);
+        
+        try {
+            Files.setPosixFilePermissions(file.toPath(), perms);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     static boolean init() {
+        MCEFPlatform platform = MCEFPlatform.getPlatform();
+        
+        // setup natives to be loadable
+        if (platform.isLinux()) {
+            File jcefHelperFile = new File(System.getProperty("mcef.libraries.path"), platform.getNormalizedName() + "/jcef_helper");
+            setUnixExecutable(jcefHelperFile);
+        } else if (platform.isMacOS()) {
+            File mcefLibrariesPath = new File(System.getProperty("mcef.libraries.path"));
+            File jcefHelperFile = new File(mcefLibrariesPath, platform.getNormalizedName() + "/jcef_app.app/Contents/Frameworks/jcef Helper.app/Contents/MacOS/jcef Helper");
+            File jcefHelperGPUFile = new File(mcefLibrariesPath, platform.getNormalizedName() + "/jcef_app.app/Contents/Frameworks/jcef Helper (GPU).app/Contents/MacOS/jcef Helper (GPU)");
+            File jcefHelperPluginFile = new File(mcefLibrariesPath, platform.getNormalizedName() + "/jcef_app.app/Contents/Frameworks/jcef Helper (Plugin).app/Contents/MacOS/jcef Helper (Plugin)");
+            File jcefHelperRendererFile = new File(mcefLibrariesPath, platform.getNormalizedName() + "/jcef_app.app/Contents/Frameworks/jcef Helper (Renderer).app/Contents/MacOS/jcef Helper (Renderer)");
+            setUnixExecutable(jcefHelperFile);
+            setUnixExecutable(jcefHelperGPUFile);
+            setUnixExecutable(jcefHelperPluginFile);
+            setUnixExecutable(jcefHelperRendererFile);
+        }
+        
         String[] cefSwitches = new String[]{
                 "--autoplay-policy=no-user-gesture-required",
-                "--disable-web-security"
+                "--disable-web-security",
+                "--enable-widevine-cdm" // https://canary.discord.com/channels/985588552735809696/992495232035868682/1151704612924039218
+                // TODO: should probably make this configurable
+                //       based off this page: https://magpcss.org/ceforum/viewtopic.php?f=6&t=11672
+                //       it seems the solution to the white screen is to add the "--disable-gpu" switch
+                //       but that shouldn't be done on all devices, so either we need to figure out a pattern and setup code to add the switch based off that, or add it as a config, if that is the case
         };
 
         if (!CefApp.startup(cefSwitches)) {
