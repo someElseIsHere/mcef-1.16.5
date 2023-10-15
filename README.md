@@ -28,4 +28,16 @@ MCEF is LGPL, as long as your project doesn't modify or include MCEF source code
 
 The submodule for the modified version of java-cef which MCEF relies on is located in common/java-cef.
 
-TODO: Release maven artifacts
+### Using MCEF in Your Project
+```
+repositories {
+    maven {
+        url = uri('https://mcef-download.cinemamod.com/repositories')
+    }
+}
+```
+```
+dependencies {
+    implementation 'com.cinemamod:mcef:2.0.0'
+}
+```
