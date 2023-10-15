@@ -69,6 +69,12 @@ dependencies {
     implementation project(path: ':common', configuration: 'namedElements')
 }
 
+loom {
+    mixin {
+        defaultRefmapName = "mcef.refmap.json"
+    }
+}
+
 tasks.register('generateJava', Copy) {
     from project(':common').file('src/template/java')
     into "${buildDir}/generated/java"
@@ -134,8 +140,11 @@ curseforge {
         addGameVersion minecraft_version
         addGameVersion 'Fabric'
         addGameVersion "Java ${java_version}"
-        mainArtifact(jar) {
+        mainArtifact(file("${buildDir}/libs/${archivesBaseName}-${version}.jar")) {
             displayName = "[FABRIC][${minecraft_version}] ${mod_name} ${mod_version}"
+        }
+        afterEvaluate {
+            uploadTask.dependsOn(remapJar)
         }
     }
     options {
@@ -151,10 +160,4 @@ shadowJar {
 remapJar {
     dependsOn shadowJar
     inputFile = shadowJar.archiveFile.get()
-}
-
-loom {
-    mixin {
-        defaultRefmapName = "mcef.refmap.json"
-    }
 }

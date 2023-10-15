@@ -31,12 +31,8 @@ minecraft {
 }
 
 mixin {
+    add sourceSets.main, 'mcef.refmap.json'
     config 'mcef.mixins.json'
-}
-
-repositories {
-    mavenCentral()
-    maven { url = 'https://maven.shedaniel.me/' }
 }
 
 /*
@@ -167,9 +163,4 @@ reobf {
 
 artifacts {
     archives deobfJar
-}
-
-mixin {
-    add sourceSets.main, 'mcef.refmap.json'
-    config 'mcef.mixins.json'
 }
