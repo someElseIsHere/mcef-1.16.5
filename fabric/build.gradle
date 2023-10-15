@@ -130,17 +130,12 @@ curseforge {
     apiKey = file("${rootDir}/curseforge_api_key.txt").exists() ? file("${rootDir}/curseforge_api_key.txt").text : ''
     project {
         id = curse_id
-        changelogType = 'markdown'
-        changelog = file('changelog.md')
         releaseType = release_type
-        addGameVersion curseforge_minecraft_version
+        addGameVersion minecraft_version
         addGameVersion 'Fabric'
         addGameVersion "Java ${java_version}"
-        mainArtifact(file("${buildDir}/libs/${archivesBaseName}-${version}.jar")) {
+        mainArtifact(jar) {
             displayName = "[FABRIC][${minecraft_version}] ${mod_name} ${mod_version}"
-        }
-        afterEvaluate {
-            uploadTask.dependsOn(remapJar)
         }
     }
     options {
