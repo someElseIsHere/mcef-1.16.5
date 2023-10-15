@@ -39,16 +39,16 @@ tasks.register('publishMaven', GradleBuild) {
     ]
 }
 
-//task publishAll(type: GradleBuild) {
-//    group = 'mcef'
-//    tasks = [
-//            ':common:clean',
-//            ':forge:clean',
-//            ':fabric:clean',
-//            ':forge:curseforge',
-//            ':fabric:curseforge'
-//    ]
-//}
+tasks.register('publishCurseforge', GradleBuild) {
+    group = 'mcef'
+    tasks = [
+            ':common:clean',
+            ':forge:clean',
+            ':fabric:clean',
+            ':forge:curseforge',
+            ':fabric:curseforge'
+    ]
+}
 
 tasks.register('fabricClient', GradleBuild) {
     group = 'mcef'
