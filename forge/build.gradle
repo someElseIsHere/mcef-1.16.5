@@ -168,6 +168,6 @@ artifacts {
 }
 
 mixin {
-    add sourceSets.main, 'mcef-refmap.json'
+    add sourceSets.main, 'mcef.refmap.json'
     config 'mcef.mixins.json'
 }

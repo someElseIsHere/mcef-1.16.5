@@ -160,6 +160,6 @@ remapJar {
 
 loom {
     mixin {
-        defaultRefmapName = "mcef-refmap.json"
+        defaultRefmapName = "mcef.refmap.json"
     }
 }

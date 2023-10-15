@@ -3,7 +3,7 @@
   "minVersion": "0.8",
   "package": "com.cinemamod.mcef.mixins",
   "compatibilityLevel": "JAVA_17",
-  "refmap": "mcef-refmap.json",
+  "refmap": "mcef.refmap.json",
   "mixins": [
   ],
   "client": [
