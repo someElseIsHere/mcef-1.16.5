@@ -82,6 +82,8 @@ dependencies {
     implementation(project(':common')) {
         transitive false
     }
+
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
 tasks.register('generateJava', Copy) {
