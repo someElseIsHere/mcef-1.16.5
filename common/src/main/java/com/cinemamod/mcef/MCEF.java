@@ -64,9 +64,18 @@ public final class MCEF {
         if (CefUtil.init()) {
             app = new MCEFApp(CefUtil.getCefApp());
             client = new MCEFClient(CefUtil.getCefClient());
+
             awaitingInit.forEach(t -> t.onInit(true));
             awaitingInit.clear();
             System.out.println("Chromium Embedded Framework initialized");
+
+            app.getHandle().registerSchemeHandlerFactory(
+                    "mod", "",
+                    (browser, frame, url, request) -> {
+                        return new ModScheme(request.getURL());
+                    }
+            );
+
             return true;
         }
         awaitingInit.forEach(t -> t.onInit(false));
