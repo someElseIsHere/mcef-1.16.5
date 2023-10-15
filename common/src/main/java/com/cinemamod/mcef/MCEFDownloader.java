@@ -20,6 +20,7 @@
 
 package com.cinemamod.mcef;
 
+import com.cinemamod.mcef.internal.MCEFDownloadListener;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
@@ -28,7 +29,6 @@ import org.apache.commons.io.FileUtils;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.function.Consumer;
 
 /**
  * A downloader and extraction tool for java-cef builds.
@@ -70,8 +70,9 @@ public class MCEFDownloader {
                 .replace("${platform}", platform.getNormalizedName());
     }
 
-    public void downloadJavaCefBuild(Consumer<Float> percentCompleteConsumer) throws IOException {
+    public void downloadJavaCefBuild(MCEFDownloadListener percentCompleteConsumer) throws IOException {
         File mcefLibrariesPath = new File(System.getProperty("mcef.libraries.path"));
+        percentCompleteConsumer.setTask("Downloading JCEF");
         downloadFile(getJavaCefDownloadUrl(), new File(mcefLibrariesPath, platform.getNormalizedName() + ".tar.gz"), percentCompleteConsumer);
     }
 
@@ -80,12 +81,13 @@ public class MCEFDownloader {
      *          false if the jcef build checksum file did not exist or did not match; this means we should redownload JCEF
      * @throws IOException
      */
-    public boolean downloadJavaCefChecksum() throws IOException {
+    public boolean downloadJavaCefChecksum(MCEFDownloadListener percentCompleteConsumer) throws IOException {
         File mcefLibrariesPath = new File(System.getProperty("mcef.libraries.path"));
         File jcefBuildHashFileTemp = new File(mcefLibrariesPath, platform.getNormalizedName() + ".tar.gz.sha256.temp");
         File jcefBuildHashFile = new File(mcefLibrariesPath, platform.getNormalizedName() + ".tar.gz.sha256");
-
-        downloadFile(getJavaCefChecksumDownloadUrl(), jcefBuildHashFileTemp, percentComplete -> {});
+        
+        percentCompleteConsumer.setTask("Downloading Checksum");
+        downloadFile(getJavaCefChecksumDownloadUrl(), jcefBuildHashFileTemp, percentCompleteConsumer);
 
         if (jcefBuildHashFile.exists()) {
             boolean sameContent = FileUtils.contentEquals(jcefBuildHashFile, jcefBuildHashFileTemp);
@@ -101,7 +103,7 @@ public class MCEFDownloader {
         return false;
     }
 
-    public void extractJavaCefBuild(boolean delete, Consumer<Float> percentCompleteConsumer) {
+    public void extractJavaCefBuild(boolean delete, MCEFDownloadListener percentCompleteConsumer) {
         File mcefLibrariesPath = new File(System.getProperty("mcef.libraries.path"));
         File tarGzArchive = new File(mcefLibrariesPath, platform.getNormalizedName() + ".tar.gz");
         extractTarGz(tarGzArchive, mcefLibrariesPath, percentCompleteConsumer);
@@ -112,7 +114,7 @@ public class MCEFDownloader {
         }
     }
 
-    private static void downloadFile(String urlString, File outputFile, Consumer<Float> percentCompleteConsumer) throws IOException {
+    private static void downloadFile(String urlString, File outputFile, MCEFDownloadListener percentCompleteConsumer) throws IOException {
         System.out.println(urlString + " -> " + outputFile.getCanonicalPath());
 
         URL url = new URL(urlString);
@@ -130,7 +132,7 @@ public class MCEFDownloader {
             outputStream.write(buffer, 0, count);
             readBytes += count;
             float percentComplete = (float) readBytes / fileSize;
-            percentCompleteConsumer.accept(percentComplete);
+            percentCompleteConsumer.setProgress(percentComplete);
             buffer = new byte[Math.max(2048, inputStream.available())];
         }
 
@@ -138,7 +140,9 @@ public class MCEFDownloader {
         outputStream.close();
     }
 
-    private static void extractTarGz(File tarGzFile, File outputDirectory, Consumer<Float> percentCompleteConsumer) {
+    private static void extractTarGz(File tarGzFile, File outputDirectory, MCEFDownloadListener percentCompleteConsumer) {
+        percentCompleteConsumer.setTask("Extracting");
+        
         outputDirectory.mkdirs();
 
         long fileSize = tarGzFile.length();
@@ -161,7 +165,7 @@ public class MCEFDownloader {
                         outputStream.write(buffer, 0, bytesRead);
                         totalBytesRead += bytesRead;
                         float percentComplete = (((float) totalBytesRead / fileSize) / 2.6158204f); // Roughly the compression ratio
-                        percentCompleteConsumer.accept(percentComplete);
+                        percentCompleteConsumer.setProgress(percentComplete);
                         buffer = new byte[Math.max(4096, tarInput.available())];
                     }
                 }
@@ -170,6 +174,6 @@ public class MCEFDownloader {
             e.printStackTrace();
         }
 
-        percentCompleteConsumer.accept(1.0f);
+        percentCompleteConsumer.setProgress(1.0f);
     }
 }

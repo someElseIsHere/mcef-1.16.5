@@ -20,10 +20,12 @@
 
 package com.cinemamod.mcef;
 
+import com.cinemamod.mcef.listeners.MCEFInitListener;
 import org.cef.misc.CefCursorType;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -36,6 +38,12 @@ public final class MCEF {
     private static MCEFApp app;
     private static MCEFClient client;
 
+    private static final ArrayList<MCEFInitListener> awaitingInit = new ArrayList<>();
+    
+    public static void scheduleForInit(MCEFInitListener task) {
+        awaitingInit.add(task);
+    }
+    
     public static MCEFSettings getSettings() {
         if (settings == null) {
             settings = new MCEFSettings();
@@ -47,23 +55,32 @@ public final class MCEF {
         }
         return settings;
     }
-
+    
     /**
-     * This gets called by {@link com.cinemamod.mcef.mixins.CefInitMixin}
-     * There is no need to call this from your project.
+     * This gets called by {@link com.cinemamod.mcef.mixins.CefInitMixin} or {@link com.cinemamod.mcef.internal.MCEFDownloaderMenu}
+     * This should not be called from anything either than those.
      */
     public static boolean initialize() {
         if (CefUtil.init()) {
             app = new MCEFApp(CefUtil.getCefApp());
             client = new MCEFClient(CefUtil.getCefClient());
+
+            awaitingInit.forEach(t -> t.onInit(true));
+            awaitingInit.clear();
+            System.out.println("Chromium Embedded Framework initialized");
+
             app.getHandle().registerSchemeHandlerFactory(
                     "mod", "",
                     (browser, frame, url, request) -> {
                         return new ModScheme(request.getURL());
                     }
             );
+
             return true;
         }
+        awaitingInit.forEach(t -> t.onInit(false));
+        awaitingInit.clear();
+        System.out.println("Could not initialize Chromium Embedded Framework");
         return false;
     }
 
