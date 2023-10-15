@@ -12,7 +12,7 @@ version="${mod_version}"
 displayName="${mod_name}"
 updateJSONURL=""
 displayTest="NONE"
-description='''TODO desc'''
+description='''A Minecraft mod and library for adding the Chromium web browser into the game (Minecraft Chromium Embedded Framework).'''
 [[dependencies.${mod_id}]]
     modId="forge"
     mandatory=true

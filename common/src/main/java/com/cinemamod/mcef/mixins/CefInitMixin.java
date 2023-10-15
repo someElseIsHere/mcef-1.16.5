@@ -20,12 +20,14 @@ public abstract class CefInitMixin {
 
     @Inject(at = @At("HEAD"), method = "setScreen", cancellable = true)
     public void redirScreen(Screen guiScreen, CallbackInfo ci) {
-        if (guiScreen instanceof TitleScreen) {
-            if (MCEFDownloadListener.INSTANCE.isDone()) {
-                MCEF.initialize();
-            } else {
-                setScreen(new MCEFDownloaderMenu((TitleScreen) guiScreen, MCEFDownloadListener.INSTANCE));
-                ci.cancel();
+        if (!MCEF.isInitialized()) {
+            if (guiScreen instanceof TitleScreen) {
+                if (MCEFDownloadListener.INSTANCE.isDone()) {
+                    MCEF.initialize();
+                } else {
+                    setScreen(new MCEFDownloaderMenu((TitleScreen) guiScreen, MCEFDownloadListener.INSTANCE));
+                    ci.cancel();
+                }
             }
         }
     }
