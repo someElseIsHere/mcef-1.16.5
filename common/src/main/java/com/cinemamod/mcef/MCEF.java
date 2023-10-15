@@ -24,10 +24,12 @@ import com.cinemamod.mcef.listeners.MCEFInitListener;
 import org.cef.misc.CefCursorType;
 import org.lwjgl.glfw.GLFW;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Properties;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.*;
 
 /**
  * An API to create Chromium web browsers in Minecraft. Uses
@@ -129,15 +131,28 @@ public final class MCEF {
     }
 
     public static String getJavaCefCommit() throws IOException {
+        // First check system property
+        if (System.getProperty("mcef.java.cef.commit") != null) {
+            return System.getProperty("mcef.java.cef.commit");
+        }
+
         // Try to get from resources (if loading from a jar)
-        InputStream inputStream = MCEF.class.getClassLoader().getResourceAsStream("META-INF/MANIFEST.MF");
-        Properties properties = new Properties();
-        try {
-            properties.load(inputStream);
-            if (properties.containsKey("java-cef-commit")) {
-                return properties.getProperty("java-cef-commit");
+        Enumeration<URL> resources = MCEF.class.getClassLoader().getResources("META-INF/MANIFEST.MF");
+        Map<String, String> commits = new HashMap<>(1);
+        resources.asIterator().forEachRemaining(resource -> {
+            Properties properties = new Properties();
+            try {
+                properties.load(resource.openStream());
+                if (properties.containsKey("java-cef-commit")) {
+                    commits.put(resource.getFile(), properties.getProperty("java-cef-commit"));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException ignored) {
+        });
+
+        if (!commits.isEmpty()) {
+            return commits.get(commits.keySet().stream().toList().get(0));
         }
 
         // Try to get from the git submodule (if loading from development environment)

@@ -57,7 +57,7 @@ public final class CefUtil {
     static boolean init() {
         MCEFPlatform platform = MCEFPlatform.getPlatform();
 
-        // setup natives to be loadable
+        // Ensure binaries are executable
         if (platform.isLinux()) {
             File jcefHelperFile = new File(System.getProperty("mcef.libraries.path"), platform.getNormalizedName() + "/jcef_helper");
             setUnixExecutable(jcefHelperFile);
