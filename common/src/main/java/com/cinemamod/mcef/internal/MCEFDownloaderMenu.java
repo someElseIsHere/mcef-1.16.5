@@ -20,7 +20,6 @@
 
 package com.cinemamod.mcef.internal;
 
-import com.cinemamod.mcef.MCEF;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -121,8 +120,6 @@ public class MCEFDownloaderMenu extends Screen {
 	@Override
 	public void tick() {
 		if (listener.done) {
-			MCEF.initialize();
-			
 			onClose();
 			Minecraft.getInstance().setScreen(menu);
 		}
