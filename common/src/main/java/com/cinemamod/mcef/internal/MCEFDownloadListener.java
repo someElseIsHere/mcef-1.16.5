@@ -23,28 +23,28 @@ package com.cinemamod.mcef.internal;
 import org.spongepowered.asm.mixin.Unique;
 
 public class MCEFDownloadListener {
-	// TODO: I kinda would like to keep other mods from accessing this, but mixin complicates stuff
-	@Unique
-	public static final MCEFDownloadListener INSTANCE = new MCEFDownloadListener();
-	
-	String task;
-	float percent;
-	boolean done;
-	
-	public void setTask(String name) {
-		this.task = name;
-		this.percent = 0;
-	}
-	
-	public void setProgress(float percent) {
-		this.percent = percent;
-	}
-	
-	public void setDone(boolean done) {
-		this.done = done;
-	}
-	
-	public boolean isDone() {
-		return done;
-	}
+    // TODO: I kinda would like to keep other mods from accessing this, but mixin complicates stuff
+    @Unique
+    public static final MCEFDownloadListener INSTANCE = new MCEFDownloadListener();
+
+    String task;
+    float percent;
+    boolean done;
+
+    public void setTask(String name) {
+        this.task = name;
+        this.percent = 0;
+    }
+
+    public void setProgress(float percent) {
+        this.percent = percent;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
+    }
+
+    public boolean isDone() {
+        return done;
+    }
 }

@@ -77,15 +77,15 @@ public class MCEFDownloader {
     }
 
     /**
-     * @return  true if the jcef build checksum file matches the remote checksum file (for the {@link MCEFDownloader#javaCefCommitHash}),
-     *          false if the jcef build checksum file did not exist or did not match; this means we should redownload JCEF
+     * @return true if the jcef build checksum file matches the remote checksum file (for the {@link MCEFDownloader#javaCefCommitHash}),
+     * false if the jcef build checksum file did not exist or did not match; this means we should redownload JCEF
      * @throws IOException
      */
     public boolean downloadJavaCefChecksum(MCEFDownloadListener percentCompleteConsumer) throws IOException {
         File mcefLibrariesPath = new File(System.getProperty("mcef.libraries.path"));
         File jcefBuildHashFileTemp = new File(mcefLibrariesPath, platform.getNormalizedName() + ".tar.gz.sha256.temp");
         File jcefBuildHashFile = new File(mcefLibrariesPath, platform.getNormalizedName() + ".tar.gz.sha256");
-        
+
         percentCompleteConsumer.setTask("Downloading Checksum");
         downloadFile(getJavaCefChecksumDownloadUrl(), jcefBuildHashFileTemp, percentCompleteConsumer);
 
@@ -127,8 +127,7 @@ public class MCEFDownloader {
         byte[] buffer = new byte[2048];
         int count;
         int readBytes = 0;
-        while((count = inputStream.read(buffer)) != -1)
-        {
+        while ((count = inputStream.read(buffer)) != -1) {
             outputStream.write(buffer, 0, count);
             readBytes += count;
             float percentComplete = (float) readBytes / fileSize;
@@ -142,7 +141,7 @@ public class MCEFDownloader {
 
     private static void extractTarGz(File tarGzFile, File outputDirectory, MCEFDownloadListener percentCompleteConsumer) {
         percentCompleteConsumer.setTask("Extracting");
-        
+
         outputDirectory.mkdirs();
 
         long fileSize = tarGzFile.length();

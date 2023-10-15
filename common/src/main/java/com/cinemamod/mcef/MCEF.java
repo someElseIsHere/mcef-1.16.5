@@ -39,11 +39,11 @@ public final class MCEF {
     private static MCEFClient client;
 
     private static final ArrayList<MCEFInitListener> awaitingInit = new ArrayList<>();
-    
+
     public static void scheduleForInit(MCEFInitListener task) {
         awaitingInit.add(task);
     }
-    
+
     public static MCEFSettings getSettings() {
         if (settings == null) {
             settings = new MCEFSettings();
@@ -55,7 +55,7 @@ public final class MCEF {
         }
         return settings;
     }
-    
+
     /**
      * This gets called by {@link com.cinemamod.mcef.mixins.CefInitMixin} or {@link com.cinemamod.mcef.internal.MCEFDownloaderMenu}
      * This should not be called from anything either than those.

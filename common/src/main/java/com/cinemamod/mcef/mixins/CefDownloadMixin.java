@@ -37,13 +37,13 @@ import java.io.IOException;
 
 /**
  * <p>
- *     mcef.libraries.path is where MCEF will store any required binaries. By default,
- *     /path/to/minecraft/.mods/mcef-libraries.
+ * mcef.libraries.path is where MCEF will store any required binaries. By default,
+ * /path/to/minecraft/.mods/mcef-libraries.
  * <p>
- *     jcef.path is the location of the standard java-cef bundle. By default,
- *     /path/to/mcef-libraries/<normalized platform name> where normalized platform name comes from
- *     {@link MCEFPlatform#getNormalizedName()}. This is what java-cef uses internally to find the
- *     installation. Also see {@link org.cef.CefApp}.
+ * jcef.path is the location of the standard java-cef bundle. By default,
+ * /path/to/mcef-libraries/<normalized platform name> where normalized platform name comes from
+ * {@link MCEFPlatform#getNormalizedName()}. This is what java-cef uses internally to find the
+ * installation. Also see {@link org.cef.CefApp}.
  */
 @Mixin(ClientPackSource.class)
 public class CefDownloadMixin {
@@ -74,23 +74,23 @@ public class CefDownloadMixin {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
+
         Thread td = new Thread(() -> {
             String javaCefCommit = null;
-            
+
             try {
                 javaCefCommit = MCEF.getJavaCefCommit();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            
+
             System.out.println("java-cef commit: " + javaCefCommit);
-            
+
             MCEFSettings settings = MCEF.getSettings();
             MCEFDownloader downloader = new MCEFDownloader(settings.getDownloadMirror(), javaCefCommit, MCEFPlatform.getPlatform());
-            
+
             boolean downloadJcefBuild = false;
-            
+
             // We always download the checksum for the java-cef build
             // We will compare this with mcef-libraries/<platform>.tar.gz.sha256
             // If the contents of the files differ (or it doesn't exist locally), we know we need to redownload JCEF
@@ -99,17 +99,17 @@ public class CefDownloadMixin {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            
+
             if (downloadJcefBuild && !settings.isSkipDownload()) {
                 try {
                     downloader.downloadJavaCefBuild(MCEFDownloadListener.INSTANCE);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                
+
                 downloader.extractJavaCefBuild(true, MCEFDownloadListener.INSTANCE);
             }
-            
+
             MCEFDownloadListener.INSTANCE.setDone(true);
         });
         td.start();

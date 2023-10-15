@@ -15,17 +15,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
 public abstract class CefInitMixin {
-	@Shadow public abstract void setScreen(@Nullable Screen guiScreen);
-	
-	@Inject(at = @At("HEAD"), method = "setScreen", cancellable = true)
-	public void redirScreen(Screen guiScreen, CallbackInfo ci) {
-		if (guiScreen instanceof TitleScreen) {
-			if (MCEFDownloadListener.INSTANCE.isDone()) {
-				MCEF.initialize();
-			} else {
-				setScreen(new MCEFDownloaderMenu((TitleScreen) guiScreen, MCEFDownloadListener.INSTANCE));
-				ci.cancel();
-			}
-		}
-	}
+    @Shadow
+    public abstract void setScreen(@Nullable Screen guiScreen);
+
+    @Inject(at = @At("HEAD"), method = "setScreen", cancellable = true)
+    public void redirScreen(Screen guiScreen, CallbackInfo ci) {
+        if (guiScreen instanceof TitleScreen) {
+            if (MCEFDownloadListener.INSTANCE.isDone()) {
+                MCEF.initialize();
+            } else {
+                setScreen(new MCEFDownloaderMenu((TitleScreen) guiScreen, MCEFDownloadListener.INSTANCE));
+                ci.cancel();
+            }
+        }
+    }
 }

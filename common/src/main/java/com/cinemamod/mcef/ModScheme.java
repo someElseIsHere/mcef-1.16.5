@@ -37,7 +37,7 @@ public class ModScheme implements CefResourceHandler {
     private String contentType = null;
     private InputStream is = null;
 
-    private String url;
+    private final String url;
 
     public ModScheme(String url) {
         this.url = url;

@@ -82,7 +82,7 @@ public class MCEFBrowser extends CefBrowserOsr {
 
         Minecraft.getInstance().submit(renderer::initialize);
     }
-    
+
     public MCEFRenderer getRenderer() {
         return renderer;
     }
@@ -98,7 +98,7 @@ public class MCEFBrowser extends CefBrowserOsr {
     public boolean usingBrowserControls() {
         return browserControls;
     }
-    
+
     /**
      * Enabling browser controls tells MCEF to mimic the behavior of an actual browser.
      * CTRL+R for reload, CTRL+Left for back, CTRL+Right for forward, etc...
@@ -110,11 +110,11 @@ public class MCEFBrowser extends CefBrowserOsr {
         this.browserControls = browserControls;
         return this;
     }
-    
+
     public MCEFDragContext getDragContext() {
         return dragContext;
     }
-    
+
     // Graphics
     @Override
     public void onPaint(CefBrowser browser, boolean popup, Rectangle[] dirtyRects, ByteBuffer buffer, int width, int height) {
@@ -136,7 +136,7 @@ public class MCEFBrowser extends CefBrowserOsr {
             }
         }
     }
-    
+
     public void resize(int width, int height) {
         browser_rect_.setBounds(0, 0, width, height);
         wasResized(width, height);
@@ -169,7 +169,7 @@ public class MCEFBrowser extends CefBrowserOsr {
                 }
             }
         }
-        
+
         CefKeyEvent e = new CefKeyEvent(CefKeyEvent.KEY_PRESS, keyCode, (char) keyCode, modifiers);
         e.scancode = scanCode;
         sendKeyEvent(e);
@@ -187,7 +187,7 @@ public class MCEFBrowser extends CefBrowserOsr {
                 else if (keyCode == GLFW_KEY_RIGHT && canGoForward()) return;
             }
         }
-        
+
         CefKeyEvent e = new CefKeyEvent(CefKeyEvent.KEY_RELEASE, keyCode, (char) keyCode, modifiers);
         e.scancode = scanCode;
         sendKeyEvent(e);
@@ -205,19 +205,19 @@ public class MCEFBrowser extends CefBrowserOsr {
                 else if ((int) c == GLFW_KEY_RIGHT && canGoForward()) return;
             }
         }
-        
+
         CefKeyEvent e = new CefKeyEvent(CefKeyEvent.KEY_TYPE, c, c, modifiers);
         sendKeyEvent(e);
     }
-    
+
     public void sendMouseMove(int mouseX, int mouseY) {
         CefMouseEvent e = new CefMouseEvent(CefMouseEvent.MOUSE_MOVED, mouseX, mouseY, 0, 0, dragContext.getVirtualModifiers(btnMask));
         sendMouseEvent(e);
-        
+
         if (dragContext.isDragging())
             this.dragTargetDragOver(new Point(mouseX, mouseY), 0, dragContext.getMask());
     }
-    
+
     // TODO: it may be necessary to add modifiers here
     public void sendMousePress(int mouseX, int mouseY, int button) {
         // for some reason, middle and right are swapped in MC
@@ -231,20 +231,20 @@ public class MCEFBrowser extends CefBrowserOsr {
         CefMouseEvent e = new CefMouseEvent(GLFW_PRESS, mouseX, mouseY, 1, button, btnMask);
         sendMouseEvent(e);
     }
-    
+
     // TODO: it may be necessary to add modifiers here
     public void sendMouseRelease(int mouseX, int mouseY, int button) {
         // For some reason, middle and right are swapped in MC
         if (button == 1) button = 2;
         else if (button == 2) button = 1;
-        
+
         if (button == 0 && (btnMask & CefMouseEvent.BUTTON1_MASK) != 0) btnMask ^= CefMouseEvent.BUTTON1_MASK;
         else if (button == 1 && (btnMask & CefMouseEvent.BUTTON2_MASK) != 0) btnMask ^= CefMouseEvent.BUTTON2_MASK;
         else if (button == 2 && (btnMask & CefMouseEvent.BUTTON3_MASK) != 0) btnMask ^= CefMouseEvent.BUTTON3_MASK;
-        
+
         CefMouseEvent e = new CefMouseEvent(GLFW_RELEASE, mouseX, mouseY, 1, button, btnMask);
         sendMouseEvent(e);
-        
+
         // drag&drop
         if (dragContext.isDragging()) {
             if (button == 0) {
@@ -252,7 +252,7 @@ public class MCEFBrowser extends CefBrowserOsr {
             }
         }
     }
-    
+
     // TODO: smooth scrolling
     public void sendMouseWheel(int mouseX, int mouseY, double amount, int modifiers) {
         if (browserControls) {
@@ -280,7 +280,7 @@ public class MCEFBrowser extends CefBrowserOsr {
         CefMouseWheelEvent e = new CefMouseWheelEvent(CefMouseWheelEvent.WHEEL_UNIT_SCROLL, mouseX, mouseY, amount, modifiers);
         sendMouseWheelEvent(e);
     }
-    
+
     // Drag & drop
     @Override
     public boolean startDragging(CefBrowser browser, CefDragData dragData, int mask, int x, int y) {
@@ -290,34 +290,34 @@ public class MCEFBrowser extends CefBrowserOsr {
         // reason: native drag handling doesn't work with off screen rendering
         return false;
     }
-    
+
     @Override
     public void updateDragCursor(CefBrowser browser, int operation) {
         if (dragContext.updateCursor(operation))
             // If the cursor to display for the drag event changes, then update the cursor
             this.onCursorChange(this, dragContext.getVirtualCursor(dragContext.getActualCursor()));
-        
+
         super.updateDragCursor(browser, operation);
     }
-    
+
     // Expose drag & drop functions
     public void startDragging(CefDragData dragData, int mask, int x, int y) { // Overload since the JCEF method requires a browser, which then goes unused
         startDragging(dragData, mask, x, y);
     }
-    
+
     public void finishDragging(int x, int y) {
         dragTargetDrop(new Point(x, y), btnMask);
         dragTargetDragLeave();
         dragContext.stopDragging();
         this.onCursorChange(this, dragContext.getActualCursor());
     }
-    
+
     public void cancelDrag() {
         dragTargetDragLeave();
         dragContext.stopDragging();
         this.onCursorChange(this, dragContext.getActualCursor());
     }
-    
+
     /* Closing */
     public void close() {
         renderer.cleanup();

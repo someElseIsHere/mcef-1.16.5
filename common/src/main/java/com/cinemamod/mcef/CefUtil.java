@@ -40,13 +40,13 @@ public final class CefUtil {
     private static boolean init;
     private static CefApp cefAppInstance;
     private static CefClient cefClientInstance;
-    
+
     private static void setUnixExecutable(File file) {
         Set<PosixFilePermission> perms = new HashSet<>();
         perms.add(PosixFilePermission.OWNER_READ);
         perms.add(PosixFilePermission.OWNER_WRITE);
         perms.add(PosixFilePermission.OWNER_EXECUTE);
-        
+
         try {
             Files.setPosixFilePermissions(file.toPath(), perms);
         } catch (IOException e) {
@@ -56,7 +56,7 @@ public final class CefUtil {
 
     static boolean init() {
         MCEFPlatform platform = MCEFPlatform.getPlatform();
-        
+
         // setup natives to be loadable
         if (platform.isLinux()) {
             File jcefHelperFile = new File(System.getProperty("mcef.libraries.path"), platform.getNormalizedName() + "/jcef_helper");
@@ -72,7 +72,7 @@ public final class CefUtil {
             setUnixExecutable(jcefHelperPluginFile);
             setUnixExecutable(jcefHelperRendererFile);
         }
-        
+
         String[] cefSwitches = new String[]{
                 "--autoplay-policy=no-user-gesture-required",
                 "--disable-web-security",
@@ -149,7 +149,7 @@ public final class CefUtil {
 
             case "pdf":
                 return "application/pdf";
-                
+
             case "xz":
                 return "application/x-xz";
             case "tar":
@@ -160,24 +160,24 @@ public final class CefUtil {
                 return "application/x-7z-compressed";
             case "zip":
                 return "application/zip";
-                
+
             case "js":
                 return "text/javascript";
             case "json":
                 return "application/json";
             case "jsonml":
                 return "application/jsonml+json";
-            
+
             case "jar":
                 return "application/java-archive";
             case "ser":
                 return "application/java-serialized-object";
             case "class":
                 return "application/java-vm";
-            
+
             case "wad":
                 return "application/x-doom";
-            
+
             case "png":
                 return "image/png";
 
@@ -201,22 +201,22 @@ public final class CefUtil {
             case "ogg":
             case "spx":
                 return "audio/ogg";
-                
+
             case "mp4":
             case "mp4v":
             case "mpg4":
                 return "video/mp4";
-                
+
             case "m4a":
             case "mp4a":
                 return "audio/mp4";
-                
+
             case "mid":
             case "midi":
             case "kar":
             case "rmi":
                 return "audio/midi";
-                
+
             case "mpga":
             case "mp2":
             case "mp2a":
@@ -224,42 +224,42 @@ public final class CefUtil {
             case "mp3a":
             case "m2a":
                 return "audio/mpeg";
-            
+
             case "mpeg":
             case "mpg":
             case "mpe":
             case "m1v":
             case "m2v":
                 return "video/mpeg";
-                
+
             case "jpgv":
                 return "video/jpeg";
-                
+
             case "h264":
                 return "video/h264";
-                
+
             case "h261":
                 return "video/h261";
-                
+
             case "h263":
                 return "video/h263";
-                
+
             case "webm":
                 return "video/webm";
-                
+
             case "flv":
                 return "video/flv";
-                
+
             case "m4v":
                 return "video/m4v";
-                
+
             case "qt":
             case "mov":
                 return "video/quicktime";
-                
+
             case "ogv":
                 return "video/ogg";
-                
+
             default:
                 return null;
         }
