@@ -34,7 +34,7 @@ public class MCEFDownloaderMenu extends Screen {
     private final TitleScreen menu;
 
     public MCEFDownloaderMenu(TitleScreen menu, MCEFDownloadListener listener) {
-        super(Component.literal("MCEF hasn't finished downloading CEF yet"));
+        super(Component.literal("MCEF is downloading Chromium Embedded Framework..."));
         this.menu = menu;
         this.listener = listener;
     }
