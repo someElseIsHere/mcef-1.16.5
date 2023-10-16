@@ -92,7 +92,6 @@ public class MCEFDownloader {
         if (jcefBuildHashFile.exists()) {
             boolean sameContent = FileUtils.contentEquals(jcefBuildHashFile, jcefBuildHashFileTemp);
             if (sameContent) {
-                System.out.println("Checksums match");
                 jcefBuildHashFileTemp.delete();
                 return true;
             }
