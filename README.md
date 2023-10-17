@@ -19,7 +19,9 @@ Discussion: https://discord.gg/rNrh5kW8Ty
 *This mod will not work on Android.
 
 ## For Players
-This is the source code for MCEF. [You can find the download for the mod on CurseForge.](https://legacy.curseforge.com/minecraft/mc-mods/mcef)
+This is the source code for MCEF.
+
+Mod download for Fabric and Forge: https://www.curseforge.com/minecraft/mc-mods/mcef
 
 ## For Modders
 MCEF is LGPL, as long as your project doesn't modify or include MCEF source code, you can choose a different license. Read the full license in the LICENSE file in this directory.
