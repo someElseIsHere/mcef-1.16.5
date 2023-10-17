@@ -24,8 +24,6 @@ This is the source code for MCEF. [You can find the download for the mod on Curs
 ## For Modders
 MCEF is LGPL, as long as your project doesn't modify or include MCEF source code, you can choose a different license. Read the full license in the LICENSE file in this directory.
 
-The submodule for the modified version of java-cef which MCEF relies on is located in common/java-cef.
-
 ### Using MCEF in Your Project
 ```
 repositories {
@@ -39,3 +37,11 @@ dependencies {
     implementation 'com.cinemamod:mcef:2.0.0'
 }
 ```
+
+### Building & Modifying MCEF
+After cloning this repo, you will need to clone the java-cef git submodule. There is a gradle task for this: `./gradlew cloneJcef`.
+
+To run the Fabric client: `./gradlew fabricClient`
+To run the Forge client: `./gradlew forgeClient`
+
+In-game, there is a demo browser if you press F10 after you're loaded into a world.
