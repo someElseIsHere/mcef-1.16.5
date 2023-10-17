@@ -23,6 +23,8 @@ package com.cinemamod.mcef;
 import com.cinemamod.mcef.listeners.MCEFInitListener;
 import org.cef.misc.CefCursorType;
 import org.lwjgl.glfw.GLFW;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -36,6 +38,7 @@ import java.util.*;
  * a modified version of java-cef (Java Chromium Embedded Framework).
  */
 public final class MCEF {
+    public static final Logger LOGGER = LoggerFactory.getLogger("MCEF");
     private static MCEFSettings settings;
     private static MCEFApp app;
     private static MCEFClient client;
@@ -44,6 +47,10 @@ public final class MCEF {
 
     public static void scheduleForInit(MCEFInitListener task) {
         awaitingInit.add(task);
+    }
+
+    public static Logger getLogger() {
+        return LOGGER;
     }
 
     public static MCEFSettings getSettings() {
@@ -59,30 +66,29 @@ public final class MCEF {
     }
 
     /**
-     * This gets called by {@link com.cinemamod.mcef.mixins.CefInitMixin} or {@link com.cinemamod.mcef.internal.MCEFDownloaderMenu}
-     * This should not be called from anything either than those.
+     * This gets called by {@link com.cinemamod.mcef.mixins.CefInitMixin}
+     * This should not be called by anything else.
      */
     public static boolean initialize() {
+        MCEF.getLogger().info("Initializing CEF on " + MCEFPlatform.getPlatform().getNormalizedName() + "...");
         if (CefUtil.init()) {
             app = new MCEFApp(CefUtil.getCefApp());
             client = new MCEFClient(CefUtil.getCefClient());
 
             awaitingInit.forEach(t -> t.onInit(true));
             awaitingInit.clear();
-            System.out.println("Chromium Embedded Framework initialized");
+            MCEF.getLogger().info("Chromium Embedded Framework initialized");
 
             app.getHandle().registerSchemeHandlerFactory(
                     "mod", "",
-                    (browser, frame, url, request) -> {
-                        return new ModScheme(request.getURL());
-                    }
+                    (browser, frame, url, request) -> new ModScheme(request.getURL())
             );
 
             return true;
         }
         awaitingInit.forEach(t -> t.onInit(false));
         awaitingInit.clear();
-        System.out.println("Could not initialize Chromium Embedded Framework");
+        MCEF.getLogger().info("Could not initialize Chromium Embedded Framework");
         return false;
     }
 

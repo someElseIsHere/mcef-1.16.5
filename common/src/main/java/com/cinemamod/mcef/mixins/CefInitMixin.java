@@ -23,7 +23,14 @@ public abstract class CefInitMixin {
         if (!MCEF.isInitialized()) {
             if (guiScreen instanceof TitleScreen) {
                 if (MCEFDownloadListener.INSTANCE.isDone()) {
-                    MCEF.initialize();
+                    Minecraft.getInstance().execute((() -> {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        MCEF.initialize();
+                    }));
                 } else {
                     setScreen(new MCEFDownloaderMenu((TitleScreen) guiScreen, MCEFDownloadListener.INSTANCE));
                     ci.cancel();

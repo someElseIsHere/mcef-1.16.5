@@ -114,7 +114,7 @@ public class MCEFDownloader {
     }
 
     private static void downloadFile(String urlString, File outputFile, MCEFDownloadListener percentCompleteConsumer) throws IOException {
-        System.out.println(urlString + " -> " + outputFile.getCanonicalPath());
+        MCEF.getLogger().info(urlString + " -> " + outputFile.getCanonicalPath());
 
         URL url = new URL(urlString);
         URLConnection urlConnection = url.openConnection();

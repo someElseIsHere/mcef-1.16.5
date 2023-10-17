@@ -84,7 +84,7 @@ public class CefDownloadMixin {
                 e.printStackTrace();
             }
 
-            System.out.println("java-cef commit: " + javaCefCommit);
+            MCEF.getLogger().info("java-cef commit: " + javaCefCommit);
 
             MCEFSettings settings = MCEF.getSettings();
             MCEFDownloader downloader = new MCEFDownloader(settings.getDownloadMirror(), javaCefCommit, MCEFPlatform.getPlatform());
