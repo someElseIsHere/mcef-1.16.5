@@ -34,7 +34,7 @@ repositories {
 ```
 ```
 dependencies {
-    implementation 'com.cinemamod:mcef:2.0.0'
+    implementation 'com.cinemamod:mcef:2.0.1'
 }
 ```
 
