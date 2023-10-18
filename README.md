@@ -32,13 +32,13 @@ MCEF is LGPL, as long as your project doesn't modify or include MCEF source code
 ```
 repositories {
     maven {
-        url = uri('https://mcef-download.cinemamod.com/repositories')
+        url = uri('https://mcef-download.cinemamod.com/repositories/releases')
     }
 }
 ```
 ```
 dependencies {
-    implementation 'com.cinemamod:mcef:2.0.1'
+    implementation 'com.cinemamod:mcef:2.0.1-1.20.1'
 }
 ```
 
