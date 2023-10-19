@@ -76,11 +76,12 @@ public class MCEFBrowser extends CefBrowserOsr {
     private int btnMask = 0;
 
     // data relating to popups and graphics
-    ByteBuffer graphics;
-    ByteBuffer popupGraphics;
-    Rectangle popupSize;
-    boolean showPopup = false;
-    boolean popupDrawn = false;
+    // marked as protected incase a mod wants to extend MCEFBrowser and override the repaint logic
+    protected ByteBuffer graphics;
+    protected ByteBuffer popupGraphics;
+    protected Rectangle popupSize;
+    protected boolean showPopup = false;
+    protected boolean popupDrawn = false;
 
     public MCEFBrowser(MCEFClient client, String url, boolean transparent) {
         super(client.getHandle(), url, transparent, null);
@@ -122,6 +123,7 @@ public class MCEFBrowser extends CefBrowserOsr {
         return dragContext;
     }
 
+    // Popups
     @Override
     public void onPopupShow(CefBrowser browser, boolean show) {
         super.onPopupShow(browser, show);
@@ -145,8 +147,10 @@ public class MCEFBrowser extends CefBrowserOsr {
         );
     }
 
+    /**
+     * Draws any existing popup menu to the browser's graphics
+     */
     protected void drawPopup() {
-        // popup must be fully drawn every frame
         if (showPopup && popupSize != null && popupDrawn) {
             RenderSystem.bindTexture(renderer.getTextureID());
             if (renderer.isTransparent()) RenderSystem.enableBlend();
@@ -158,7 +162,17 @@ public class MCEFBrowser extends CefBrowserOsr {
         }
     }
 
-    protected void store(ByteBuffer srcBuffer, ByteBuffer dstBuffer, Rectangle dirty, int width, int height) {
+    /**
+     * Copies data within a rectangle from one buffer to another
+     * Used by repaint logic
+     *
+     * @param srcBuffer the buffer to copy from
+     * @param dstBuffer the buffer to copy to
+     * @param dirty     the rectangle that needs to be updated
+     * @param width     the width of the browser
+     * @param height    the height of the browser
+     */
+    public static void store(ByteBuffer srcBuffer, ByteBuffer dstBuffer, Rectangle dirty, int width, int height) {
         for (int y = dirty.y; y < dirty.height + dirty.y; y++) {
             dstBuffer.position((y * width + dirty.x) * 4);
             srcBuffer.position((y * width + dirty.x) * 4);
@@ -185,10 +199,12 @@ public class MCEFBrowser extends CefBrowserOsr {
             lastWidth = width;
             lastHeight = height;
         } else {
-            // update sub-rects
+            // don't update graphics if the renderer is not initialized
             if (renderer.getTextureID() == 0) return;
 
+            // update sub-rects
             if (!popup) {
+                // graphics will be updated later if it's a popup
                 RenderSystem.bindTexture(renderer.getTextureID());
                 if (renderer.isTransparent()) RenderSystem.enableBlend();
                 RenderSystem.pixelStore(GL_UNPACK_ROW_LENGTH, width);
@@ -200,8 +216,9 @@ public class MCEFBrowser extends CefBrowserOsr {
                     // due to how CEF handles popups, the graphics of the popup and the graphics of the browser itself need to be stored separately
                     store(buffer, popup ? popupGraphics : graphics, dirtyRect, width, height);
 
-                // upload to the GPU
+                // graphics will be updated later if it's a popup
                 if (!popup) {
+                    // upload to the GPU
                     GlStateManager._pixelStore(GL_UNPACK_SKIP_PIXELS, dirtyRect.x);
                     GlStateManager._pixelStore(GL_UNPACK_SKIP_ROWS, dirtyRect.y);
                     renderer.onPaint(buffer, dirtyRect.x, dirtyRect.y, dirtyRect.width, dirtyRect.height);
@@ -210,6 +227,7 @@ public class MCEFBrowser extends CefBrowserOsr {
         }
 
         // upload popup to GPU
+        // popup must be fully drawn every time paint is called
         drawPopup();
     }
 
