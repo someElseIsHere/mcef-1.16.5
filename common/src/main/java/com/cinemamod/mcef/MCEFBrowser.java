@@ -145,7 +145,7 @@ public class MCEFBrowser extends CefBrowserOsr {
         );
     }
 
-    void drawPopup() {
+    protected void drawPopup() {
         // popup must be fully drawn every frame
         if (showPopup && popupSize != null && popupDrawn) {
             RenderSystem.bindTexture(renderer.getTextureID());
@@ -158,7 +158,7 @@ public class MCEFBrowser extends CefBrowserOsr {
         }
     }
 
-    void store(ByteBuffer srcBuffer, ByteBuffer dstBuffer, Rectangle dirty, int width, int height) {
+    protected void store(ByteBuffer srcBuffer, ByteBuffer dstBuffer, Rectangle dirty, int width, int height) {
         for (int y = dirty.y; y < dirty.height + dirty.y; y++) {
             dstBuffer.position((y * width + dirty.x) * 4);
             srcBuffer.position((y * width + dirty.x) * 4);
