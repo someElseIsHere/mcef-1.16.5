@@ -14,11 +14,13 @@ Discussion: https://discord.gg/rNrh5kW8Ty
 Current Chromium version: `108.0.5359.125`
 
 ## Supported Platforms
-- Windows 10/11 (x86_64, arm64)
+- Windows 10/11 (x86_64, arm64)*
 - macOS 11 or greater (Intel, Apple Silicon)
-- GNU Linux glibc 2.31 or greater (x86_64, arm64)*
+- GNU Linux glibc 2.31 or greater (x86_64, arm64)**
 
-*This mod will not work on Android.
+*Some antivirus software may prevent MCEF from initializing. You may have to disable your antivirus or whitelist the mod files for MCEF to work properly.
+
+**This mod will not work on Android.
 
 ## For Players
 This is the source code for MCEF.
