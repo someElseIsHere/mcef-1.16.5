@@ -36,6 +36,10 @@ repositories {
     maven {
         url = uri('https://mcef-download.cinemamod.com/repositories/releases')
     }
+    // Optional for snapshot versions
+    maven {
+        url = uri('https://mcef-download.cinemamod.com/repositories/snapshots')
+    }
 }
 ```
 ```
