@@ -24,14 +24,15 @@ repositories {
 /*
     Add the following to ~/.gradle/gradle.properties
     systemProp.org.gradle.s3.endpoint=https://<the s3 endpoint>
-    MCEF_S3_PUBLISH_URL=s3://<bucket>/repositories/releases
+    MCEF_S3_PUBLISH_URL_SNAPSHOT=s3://<bucket>/repositories/snapshots
+    MCEF_S3_PUBLISH_URL_RELEASE=s3://<bucket>/repositories/releases
     MCEF_S3_PUBLISH_ACCESS_KEY=<access key>
     MCEF_S3_PUBLISH_SECRET_KEY=<secret key>
  */
 publishing {
     repositories {
         maven {
-            url findProperty('MCEF_S3_PUBLISH_URL')
+            url ((version.toString().endsWith("SNAPSHOT")) ? findProperty('MCEF_S3_PUBLISH_URL_SNAPSHOT') : findProperty('MCEF_S3_PUBLISH_URL_RELEASE'))
             credentials(AwsCredentials) {
                 accessKey = findProperty('MCEF_S3_PUBLISH_ACCESS_KEY')
                 secretKey = findProperty('MCEF_S3_PUBLISH_SECRET_KEY')
