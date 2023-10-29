@@ -32,7 +32,7 @@ repositories {
 publishing {
     repositories {
         maven {
-            url ((version.toString().endsWith("SNAPSHOT")) ? findProperty('MCEF_S3_PUBLISH_URL_SNAPSHOT') : findProperty('MCEF_S3_PUBLISH_URL_RELEASE'))
+            url ((mcef_version.toString().endsWith("SNAPSHOT")) ? findProperty('MCEF_S3_PUBLISH_URL_SNAPSHOT') : findProperty('MCEF_S3_PUBLISH_URL_RELEASE'))
             credentials(AwsCredentials) {
                 accessKey = findProperty('MCEF_S3_PUBLISH_ACCESS_KEY')
                 secretKey = findProperty('MCEF_S3_PUBLISH_SECRET_KEY')
