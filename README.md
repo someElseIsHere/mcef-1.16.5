@@ -11,7 +11,7 @@ MCEF contains a downloader system for downloading the java-cef & CEF binaries re
 
 Discussion: https://discord.gg/rNrh5kW8Ty
 
-Current Chromium version: `108.0.5359.125`
+Current Chromium version: `116.0.5845.190`
 
 ## Supported Platforms
 - Windows 10/11 (x86_64, arm64)*
