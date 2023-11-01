@@ -25,7 +25,9 @@ Current Chromium version: `116.0.5845.190`
 ## For Players
 This is the source code for MCEF.
 
-Mod download for Fabric and Forge: https://www.curseforge.com/minecraft/mc-mods/mcef
+Download the mod for Fabric or Forge on either:
+- CurseForge: https://www.curseforge.com/minecraft/mc-mods/mcef
+- Modrinth: https://modrinth.com/mod/mcef
 
 ## For Modders
 MCEF is LGPL, as long as your project doesn't modify or include MCEF source code, you can choose a different license. Read the full license in the LICENSE file in this directory.
