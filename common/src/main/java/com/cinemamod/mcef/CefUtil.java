@@ -98,6 +98,10 @@ final class CefUtil {
         // Set the user agent if there's one defined in MCEFSettings
         if (!Objects.equals(settings.getUserAgent(), "null")) {
             cefSettings.user_agent = settings.getUserAgent();
+        } else {
+            // If there is no custom defined user agent, set a user agent product.
+            // Work around for Google sign-in "This browser or app may not be secure."
+            cefSettings.user_agent_product = "MCEF/2";
         }
 
         cefAppInstance = CefApp.getInstance(cefSwitches, cefSettings);
