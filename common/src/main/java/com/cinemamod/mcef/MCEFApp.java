@@ -22,6 +22,9 @@ package com.cinemamod.mcef;
 
 import org.cef.CefApp;
 
+/**
+ * A wrapper around {@link CefApp}
+ */
 public class MCEFApp {
     private final CefApp handle;
 

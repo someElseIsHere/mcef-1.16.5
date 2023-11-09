@@ -75,13 +75,14 @@ public class CefDownloadMixin {
             e.printStackTrace();
         }
 
-        Thread td = new Thread(() -> {
-            String javaCefCommit = null;
+        Thread downloadThread = new Thread(() -> {
+            String javaCefCommit;
 
             try {
                 javaCefCommit = MCEF.getJavaCefCommit();
             } catch (IOException e) {
                 e.printStackTrace();
+                return;
             }
 
             MCEF.getLogger().info("java-cef commit: " + javaCefCommit);
@@ -89,7 +90,7 @@ public class CefDownloadMixin {
             MCEFSettings settings = MCEF.getSettings();
             MCEFDownloader downloader = new MCEFDownloader(settings.getDownloadMirror(), javaCefCommit, MCEFPlatform.getPlatform());
 
-            boolean downloadJcefBuild = false;
+            boolean downloadJcefBuild;
 
             // We always download the checksum for the java-cef build
             // We will compare this with mcef-libraries/<platform>.tar.gz.sha256
@@ -98,6 +99,7 @@ public class CefDownloadMixin {
                 downloadJcefBuild = !downloader.downloadJavaCefChecksum(MCEFDownloadListener.INSTANCE);
             } catch (IOException e) {
                 e.printStackTrace();
+                return;
             }
 
             if (downloadJcefBuild && !settings.isSkipDownload()) {
@@ -105,6 +107,7 @@ public class CefDownloadMixin {
                     downloader.downloadJavaCefBuild(MCEFDownloadListener.INSTANCE);
                 } catch (IOException e) {
                     e.printStackTrace();
+                    return;
                 }
 
                 downloader.extractJavaCefBuild(true, MCEFDownloadListener.INSTANCE);
@@ -112,6 +115,6 @@ public class CefDownloadMixin {
 
             MCEFDownloadListener.INSTANCE.setDone(true);
         });
-        td.start();
+        downloadThread.start();
     }
 }

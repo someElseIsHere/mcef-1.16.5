@@ -34,6 +34,9 @@ import org.cef.network.CefRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A wrapper around {@link CefClient}
+ */
 public class MCEFClient implements CefLoadHandler, CefContextMenuHandler, CefDisplayHandler {
     private final CefClient handle;
     private final List<CefLoadHandler> loadHandlers = new ArrayList<>();
@@ -128,7 +131,6 @@ public class MCEFClient implements CefLoadHandler, CefContextMenuHandler, CefDis
         for (CefDisplayHandler displayHandler : displayHandlers) displayHandler.onStatusMessage(browser, value);
     }
 
-    // TODO: should this just log to console?
     @Override
     public boolean onConsoleMessage(CefBrowser browser, CefSettings.LogSeverity level, String message, String source, int line) {
         for (CefDisplayHandler displayHandler : displayHandlers)

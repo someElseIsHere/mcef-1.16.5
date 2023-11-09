@@ -76,7 +76,7 @@ public class ModScheme implements CefResourceHandler {
         contentType = null;
         pos = loc.lastIndexOf('.');
         if (pos >= 0 && pos < loc.length() - 2)
-            contentType = CefUtil.mimeFromExtension(loc.substring(pos + 1));
+            contentType = MIMEUtil.mimeFromExtension(loc.substring(pos + 1));
 
         cefCallback.Continue();
         return true;

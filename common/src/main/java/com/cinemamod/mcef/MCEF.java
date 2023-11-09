@@ -53,6 +53,10 @@ public final class MCEF {
         return LOGGER;
     }
 
+    /**
+     * Get access to various settings for MCEF.
+     * @return Returns the existing {@link MCEFSettings} or creates a new {@link MCEFSettings} and loads from disk (blocking)
+     */
     public static MCEFSettings getSettings() {
         if (settings == null) {
             settings = new MCEFSettings();
@@ -66,7 +70,7 @@ public final class MCEF {
     }
 
     /**
-     * This gets called by {@link com.cinemamod.mcef.mixins.CefInitMixin}
+     * This gets called by {@link com.cinemamod.mcef.mixins.CefInitMixin}.
      * This should not be called by anything else.
      */
     public static boolean initialize() {
@@ -89,19 +93,33 @@ public final class MCEF {
         awaitingInit.forEach(t -> t.onInit(false));
         awaitingInit.clear();
         MCEF.getLogger().info("Could not initialize Chromium Embedded Framework");
+        shutdown();
         return false;
     }
 
+    /**
+     * Will assert that MCEF has been initialized; throws a {@link RuntimeException} if not.
+     * @return the {@link MCEFApp} instance
+     */
     public static MCEFApp getApp() {
         assertInitialized();
         return app;
     }
 
+    /**
+     * Will assert that MCEF has been initialized; throws a {@link RuntimeException} if not.
+     * @return the {@link MCEFClient} instance
+     */
     public static MCEFClient getClient() {
         assertInitialized();
         return client;
     }
 
+    /**
+     * Will assert that MCEF has been initialized; throws a {@link RuntimeException} if not.
+     * Creates a new Chromium web browser with some starting URL. Can set it to be transparent rendering.
+     * @return the {@link MCEFBrowser} web browser instance
+     */
     public static MCEFBrowser createBrowser(String url, boolean transparent) {
         assertInitialized();
         MCEFBrowser browser = new MCEFBrowser(client, url, transparent);
@@ -110,6 +128,12 @@ public final class MCEF {
         return browser;
     }
 
+    /**
+     * Will assert that MCEF has been initialized; throws a {@link RuntimeException} if not.
+     * Creates a new Chromium web browser with some starting URL, width, and height.
+     * Can set it to be transparent rendering.
+     * @return the {@link MCEFBrowser} web browser instance
+     */
     public static MCEFBrowser createBrowser(String url, boolean transparent, int width, int height) {
         assertInitialized();
         MCEFBrowser browser = new MCEFBrowser(client, url, transparent);
@@ -119,10 +143,17 @@ public final class MCEF {
         return browser;
     }
 
+    /**
+     * Check if MCEF is initialized.
+     * @return true if MCEF is initialized correctly, false if not
+     */
     public static boolean isInitialized() {
         return client != null;
     }
 
+    /**
+     * Request a shutdown of MCEF/CEF. Nothing will happen if not initialized.
+     */
     public static void shutdown() {
         if (isInitialized()) {
             CefUtil.shutdown();
@@ -131,11 +162,20 @@ public final class MCEF {
         }
     }
 
+    /**
+     * Check if MCEF has been initialized, throws a {@link RuntimeException} if not.
+     */
     private static void assertInitialized() {
         if (!isInitialized())
             throw new RuntimeException("Chromium Embedded Framework was never initialized.");
     }
 
+    /**
+     * Get the git commit hash of the java-cef code (either from MANIFEST.MF or from the git repo on-disk if in a
+     * development environment). Used for downloading the java-cef release.
+     * @return The git commit hash of java-cef
+     * @throws IOException
+     */
     public static String getJavaCefCommit() throws IOException {
         // First check system property
         if (System.getProperty("mcef.java.cef.commit") != null) {
@@ -176,8 +216,6 @@ public final class MCEF {
         return null;
     }
 
-    private static final HashMap<CefCursorType, Long> CEF_TO_GLFW_CURSORS = new HashMap<>();
-
     /**
      * Helper method to get a GLFW cursor handle for the given {@link CefCursorType} cursor type
      */
@@ -187,4 +225,5 @@ public final class MCEF {
         CEF_TO_GLFW_CURSORS.put(cursorType, glfwCursorHandle);
         return glfwCursorHandle;
     }
+    private static final HashMap<CefCursorType, Long> CEF_TO_GLFW_CURSORS = new HashMap<>();
 }

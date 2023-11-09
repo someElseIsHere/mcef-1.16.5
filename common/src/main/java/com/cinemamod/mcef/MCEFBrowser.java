@@ -75,8 +75,8 @@ public class MCEFBrowser extends CefBrowserOsr {
      */
     private int btnMask = 0;
 
-    // data relating to popups and graphics
-    // marked as protected incase a mod wants to extend MCEFBrowser and override the repaint logic
+    // Data relating to popups and graphics
+    // Marked as protected in-case a mod wants to extend MCEFBrowser and override the repaint logic
     protected ByteBuffer graphics;
     protected ByteBuffer popupGraphics;
     protected Rectangle popupSize;
@@ -187,38 +187,38 @@ public class MCEFBrowser extends CefBrowserOsr {
     @Override
     public void onPaint(CefBrowser browser, boolean popup, Rectangle[] dirtyRects, ByteBuffer buffer, int width, int height) {
         if (!popup && (width != lastWidth || height != lastHeight)) {
-            // copy buffer
+            // Copy buffer
             graphics = ByteBuffer.allocateDirect(buffer.capacity());
             graphics.position(0).limit(graphics.capacity());
             graphics.put(buffer);
             graphics.position(0);
             buffer.position(0);
 
-            // draw
+            // Draw
             renderer.onPaint(buffer, width, height);
             lastWidth = width;
             lastHeight = height;
         } else {
-            // don't update graphics if the renderer is not initialized
+            // Don't update graphics if the renderer is not initialized
             if (renderer.getTextureID() == 0) return;
 
-            // update sub-rects
+            // Update sub-rects
             if (!popup) {
-                // graphics will be updated later if it's a popup
+                // Graphics will be updated later if it's a popup
                 RenderSystem.bindTexture(renderer.getTextureID());
                 if (renderer.isTransparent()) RenderSystem.enableBlend();
                 RenderSystem.pixelStore(GL_UNPACK_ROW_LENGTH, width);
             } else popupDrawn = true;
 
             for (Rectangle dirtyRect : dirtyRects) {
-                // check that the popup isn't being cleared from the image
+                // Check that the popup isn't being cleared from the image
                 if (buffer != graphics)
-                    // due to how CEF handles popups, the graphics of the popup and the graphics of the browser itself need to be stored separately
+                    // Due to how CEF handles popups, the graphics of the popup and the graphics of the browser itself need to be stored separately
                     store(buffer, popup ? popupGraphics : graphics, dirtyRect, width, height);
 
-                // graphics will be updated later if it's a popup
+                // Graphics will be updated later if it's a popup
                 if (!popup) {
-                    // upload to the GPU
+                    // Upload to the GPU
                     GlStateManager._pixelStore(GL_UNPACK_SKIP_PIXELS, dirtyRect.x);
                     GlStateManager._pixelStore(GL_UNPACK_SKIP_ROWS, dirtyRect.y);
                     renderer.onPaint(buffer, dirtyRect.x, dirtyRect.y, dirtyRect.width, dirtyRect.height);
@@ -226,8 +226,7 @@ public class MCEFBrowser extends CefBrowserOsr {
             }
         }
 
-        // upload popup to GPU
-        // popup must be fully drawn every time paint is called
+        // Upload popup to GPU, must be fully drawn every time paint is called
         drawPopup();
     }
 
@@ -412,7 +411,7 @@ public class MCEFBrowser extends CefBrowserOsr {
         this.onCursorChange(this, dragContext.getActualCursor());
     }
 
-    /* Closing */
+    // Closing
     public void close() {
         renderer.cleanup();
         cursorChangeListener.onCursorChange(0);
@@ -425,7 +424,7 @@ public class MCEFBrowser extends CefBrowserOsr {
         super.finalize();
     }
 
-    /* Cursor handling */
+    // Cursor handling
     @Override
     public boolean onCursorChange(CefBrowser browser, int cursorType) {
         cursorType = dragContext.getVirtualCursor(cursorType);

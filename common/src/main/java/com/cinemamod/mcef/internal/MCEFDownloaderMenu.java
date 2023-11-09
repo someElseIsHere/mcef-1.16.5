@@ -68,7 +68,7 @@ public class MCEFDownloaderMenu extends Screen {
         );
         graphics.fill( // bar bar
                 4, 4,
-                (int) ((progressBarWidth - 4) * listener.percent),
+                (int) ((progressBarWidth - 4) * listener.getProgress()),
                 (int) progressBarHeight - 4,
                 -1
         );
@@ -77,8 +77,8 @@ public class MCEFDownloaderMenu extends Screen {
         // putting this here incase I want to re-add a third line later on
         // allows me to generalize the code to not care about line count
         String[] text = new String[]{
-                listener.task,
-                Math.round(listener.percent * 100) + "%",
+                listener.getTask(),
+                Math.round(listener.getProgress() * 100) + "%",
         };
         text[0] = "Extracting";
 
@@ -119,7 +119,7 @@ public class MCEFDownloaderMenu extends Screen {
 
     @Override
     public void tick() {
-        if (listener.done) {
+        if (listener.isDone()) {
             onClose();
             Minecraft.getInstance().setScreen(menu);
         }

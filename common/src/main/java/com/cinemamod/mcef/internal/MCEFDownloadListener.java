@@ -27,17 +27,25 @@ public class MCEFDownloadListener {
     @Unique
     public static final MCEFDownloadListener INSTANCE = new MCEFDownloadListener();
 
-    String task;
-    float percent;
-    boolean done;
+    private String task;
+    private float percent;
+    private boolean done;
 
     public void setTask(String name) {
         this.task = name;
         this.percent = 0;
     }
 
+    public String getTask() {
+        return task;
+    }
+
     public void setProgress(float percent) {
         this.percent = percent;
+    }
+
+    public float getProgress() {
+        return percent;
     }
 
     public void setDone(boolean done) {
