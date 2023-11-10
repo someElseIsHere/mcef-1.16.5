@@ -46,7 +46,7 @@ repositories {
 ```
 ```
 dependencies {
-    implementation 'com.cinemamod:mcef:2.1.0-1.20.1'
+    implementation 'com.cinemamod:mcef:2.1.1-1.20.1'
 }
 ```
 See the [mcef-fabric-example-mod](https://github.com/CinemaMod/mcef-fabric-example-mod) for a complete example Fabric project.
