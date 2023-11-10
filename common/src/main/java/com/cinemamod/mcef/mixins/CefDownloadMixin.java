@@ -38,7 +38,7 @@ import java.io.IOException;
 /**
  * <p>
  * mcef.libraries.path is where MCEF will store any required binaries. By default,
- * /path/to/minecraft/.mods/mcef-libraries.
+ * /path/to/.minecraft/mods/mcef-libraries.
  * <p>
  * jcef.path is the location of the standard java-cef bundle. By default,
  * /path/to/mcef-libraries/<normalized platform name> where normalized platform name comes from
