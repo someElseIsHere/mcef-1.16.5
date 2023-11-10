@@ -88,6 +88,9 @@ public final class MCEF {
                     (browser, frame, url, request) -> new ModScheme(request.getURL())
             );
 
+            // Add shutdown hook - without this, the JCEF helper process will linger and eat CPU
+            Runtime.getRuntime().addShutdownHook(new Thread(CefUtil::shutdown, "MCEF-Shutdown"));
+
             return true;
         }
         awaitingInit.forEach(t -> t.onInit(false));
