@@ -64,7 +64,7 @@ dependencies {
     ]
 
     apiModules.forEach {
-        include(modImplementation(fabricApi.module(it, fabric_version)))
+        modImplementation(fabricApi.module(it, fabric_version))
     }
 
     implementation project(path: ':common', configuration: 'namedElements')
