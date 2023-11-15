@@ -44,13 +44,22 @@ repositories {
     }
 }
 ```
+#### Fabric
 ```
 dependencies {
-    implementation 'com.cinemamod:mcef:2.1.1-1.20.1'
+    modCompileOnly "com.cinemamod:mcef:2.1.1-1.20.1"
+    modRuntimeOnly "com.cinemamod:mcef-fabric:2.1.1-1.20.1"
 }
 ```
 See the [mcef-fabric-example-mod](https://github.com/CinemaMod/mcef-fabric-example-mod) for a complete example Fabric project.
 
+#### NeoForge
+```
+dependencies {
+    compileOnly fg.deobf("com.cinemamod:mcef:2.1.1-1.20.1")
+    runtimeOnly fg.deobf("com.cinemamod:mcef-forge:2.1.1-1.20.1")
+}
+```
 ### Building & Modifying MCEF
 After cloning this repo, you will need to clone the java-cef git submodule. There is a gradle task for this: `./gradlew cloneJcef`.
 
