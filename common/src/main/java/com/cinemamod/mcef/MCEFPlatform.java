@@ -20,6 +20,8 @@
 
 package com.cinemamod.mcef;
 
+import java.util.Locale;
+
 public enum MCEFPlatform {
     LINUX_AMD64,
     LINUX_ARM64,
@@ -29,7 +31,7 @@ public enum MCEFPlatform {
     MACOS_ARM64;
 
     public String getNormalizedName() {
-        return name().toLowerCase();
+        return name().toLowerCase(Locale.US);
     }
 
     public boolean isLinux() {

@@ -99,6 +99,7 @@ public class CefDownloadMixin {
                 downloadJcefBuild = !downloader.downloadJavaCefChecksum(MCEFDownloadListener.INSTANCE);
             } catch (IOException e) {
                 e.printStackTrace();
+                MCEFDownloadListener.INSTANCE.setFailed(true);
                 return;
             }
 
@@ -107,6 +108,7 @@ public class CefDownloadMixin {
                     downloader.downloadJavaCefBuild(MCEFDownloadListener.INSTANCE);
                 } catch (IOException e) {
                     e.printStackTrace();
+                    MCEFDownloadListener.INSTANCE.setFailed(true);
                     return;
                 }
 

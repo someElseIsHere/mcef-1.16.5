@@ -22,7 +22,8 @@ public abstract class CefInitMixin {
     public void redirScreen(Screen guiScreen, CallbackInfo ci) {
         if (!MCEF.isInitialized()) {
             if (guiScreen instanceof TitleScreen) {
-                if (MCEFDownloadListener.INSTANCE.isDone()) {
+                // If the download is done and didn't fail
+                if (MCEFDownloadListener.INSTANCE.isDone() && !MCEFDownloadListener.INSTANCE.isFailed()) {
                     Minecraft.getInstance().execute((() -> {
                         try {
                             Thread.sleep(1000);
@@ -31,9 +32,15 @@ public abstract class CefInitMixin {
                         }
                         MCEF.initialize();
                     }));
-                } else {
+                }
+                // If the download is not done and didn't fail
+                else if (!MCEFDownloadListener.INSTANCE.isDone() && !MCEFDownloadListener.INSTANCE.isFailed()) {
                     setScreen(new MCEFDownloaderMenu((TitleScreen) guiScreen, MCEFDownloadListener.INSTANCE));
                     ci.cancel();
+                }
+                // If the download failed
+                else if (MCEFDownloadListener.INSTANCE.isFailed()) {
+                    MCEF.getLogger().error("MCEF failed to initialize!");
                 }
             }
         }

@@ -115,11 +115,13 @@ public class MCEFDownloaderMenu extends Screen {
             index++;
         }
         poseStack.popPose();
+
+        // TODO: if listener.isFailed(), draw some "Failed to initialize MCEF" text with an "OK" button to proceed
     }
 
     @Override
     public void tick() {
-        if (listener.isDone()) {
+        if (listener.isDone() || listener.isFailed()) {
             onClose();
             Minecraft.getInstance().setScreen(menu);
         }

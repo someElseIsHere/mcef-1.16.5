@@ -30,6 +30,7 @@ public class MCEFDownloadListener {
     private String task;
     private float percent;
     private boolean done;
+    private boolean failed;
 
     public void setTask(String name) {
         this.task = name;
@@ -54,5 +55,13 @@ public class MCEFDownloadListener {
 
     public boolean isDone() {
         return done;
+    }
+
+    public void setFailed(boolean failed) {
+        this.failed = failed;
+    }
+
+    public boolean isFailed() {
+        return failed;
     }
 }

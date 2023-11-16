@@ -27,8 +27,8 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 
 /**
  * A downloader and extraction tool for java-cef builds.
@@ -114,28 +114,37 @@ public class MCEFDownloader {
     }
 
     private static void downloadFile(String urlString, File outputFile, MCEFDownloadListener percentCompleteConsumer) throws IOException {
-        MCEF.getLogger().info(urlString + " -> " + outputFile.getCanonicalPath());
+        try {
+            MCEF.getLogger().info(urlString + " -> " + outputFile.getCanonicalPath());
 
-        URL url = new URL(urlString);
-        URLConnection urlConnection = url.openConnection();
-        int fileSize = urlConnection.getContentLength();
+            URL url = new URL(urlString);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
-        BufferedInputStream inputStream = new BufferedInputStream(url.openStream());
-        FileOutputStream outputStream = new FileOutputStream(outputFile);
+            if (urlConnection.getResponseCode() != 200) {
+                throw new IOException();
+            }
 
-        byte[] buffer = new byte[2048];
-        int count;
-        int readBytes = 0;
-        while ((count = inputStream.read(buffer)) != -1) {
-            outputStream.write(buffer, 0, count);
-            readBytes += count;
-            float percentComplete = (float) readBytes / fileSize;
-            percentCompleteConsumer.setProgress(percentComplete);
-            buffer = new byte[Math.max(2048, inputStream.available())];
+            int fileSize = urlConnection.getContentLength();
+
+            BufferedInputStream inputStream = new BufferedInputStream(url.openStream());
+            FileOutputStream outputStream = new FileOutputStream(outputFile);
+
+            byte[] buffer = new byte[2048];
+            int count;
+            int readBytes = 0;
+            while ((count = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, count);
+                readBytes += count;
+                float percentComplete = (float) readBytes / fileSize;
+                percentCompleteConsumer.setProgress(percentComplete);
+                buffer = new byte[Math.max(2048, inputStream.available())];
+            }
+
+            inputStream.close();
+            outputStream.close();
+        } catch (IOException e) {
+            throw new IOException("Failed to download " + urlString);
         }
-
-        inputStream.close();
-        outputStream.close();
     }
 
     private static void extractTarGz(File tarGzFile, File outputDirectory, MCEFDownloadListener percentCompleteConsumer) {
