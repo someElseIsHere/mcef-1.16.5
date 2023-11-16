@@ -4,6 +4,6 @@
 - Make a tag with the version name
 - Publish to maven repo with `./gradlew publishMaven`
 - Update [mcef-fabric-example-mod](https://github.com/CinemaMod/mcef-fabric-example-mod) using the newly published maven artifact and make sure things work as expected
-- Publish to CurseForge with `./gradlew publishCurgeforge`
+- Publish to CurseForge with `./gradlew publishCurseforge`
 - Manually upload the new release to Modrinth (download the jars from CF and reupload)
 - Announce the new release on Discord
