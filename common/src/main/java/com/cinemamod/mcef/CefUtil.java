@@ -110,6 +110,7 @@ final class CefUtil {
         cefAppInstance.macOSTerminationRequestRunnable = new Runnable() {
             @Override
             public void run() {
+                shutdown();
                 Minecraft.getInstance().stop();
             }
         };
