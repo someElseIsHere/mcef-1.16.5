@@ -106,7 +106,7 @@ public class CefDownloadMixin {
             // Ensure the mcef-libraries directory exists
             // If not, we want to try redownloading
             File mcefLibrariesDir = new File(System.getProperty("mcef.libraries.path"));
-            downloadJcefBuild |= mcefLibrariesDir.exists();
+            downloadJcefBuild |= !mcefLibrariesDir.exists();
 
             if (downloadJcefBuild && !settings.isSkipDownload()) {
                 try {
