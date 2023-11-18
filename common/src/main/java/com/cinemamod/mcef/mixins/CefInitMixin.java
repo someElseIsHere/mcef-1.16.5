@@ -35,7 +35,7 @@ public abstract class CefInitMixin {
                 }
                 // If the download is not done and didn't fail
                 else if (!MCEFDownloadListener.INSTANCE.isDone() && !MCEFDownloadListener.INSTANCE.isFailed()) {
-                    setScreen(new MCEFDownloaderMenu((TitleScreen) guiScreen, MCEFDownloadListener.INSTANCE));
+                    setScreen(new MCEFDownloaderMenu((TitleScreen) guiScreen));
                     ci.cancel();
                 }
                 // If the download failed

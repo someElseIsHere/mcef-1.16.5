@@ -29,14 +29,11 @@ import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.network.chat.Component;
 
 public class MCEFDownloaderMenu extends Screen {
-    private final MCEFDownloadListener listener;
-
     private final TitleScreen menu;
 
-    public MCEFDownloaderMenu(TitleScreen menu, MCEFDownloadListener listener) {
-        super(Component.literal("MCEF is downloading Chromium Embedded Framework..."));
+    public MCEFDownloaderMenu(TitleScreen menu) {
+        super(Component.literal("MCEF is downloading required libraries..."));
         this.menu = menu;
-        this.listener = listener;
     }
 
     @Override
@@ -68,7 +65,7 @@ public class MCEFDownloaderMenu extends Screen {
         );
         graphics.fill( // bar bar
                 4, 4,
-                (int) ((progressBarWidth - 4) * listener.getProgress()),
+                (int) ((progressBarWidth - 4) * MCEFDownloadListener.INSTANCE.getProgress()),
                 (int) progressBarHeight - 4,
                 -1
         );
@@ -77,10 +74,9 @@ public class MCEFDownloaderMenu extends Screen {
         // putting this here incase I want to re-add a third line later on
         // allows me to generalize the code to not care about line count
         String[] text = new String[]{
-                listener.getTask(),
-                Math.round(listener.getProgress() * 100) + "%",
+                MCEFDownloadListener.INSTANCE.getTask(),
+                Math.round(MCEFDownloadListener.INSTANCE.getProgress() * 100) + "%",
         };
-        text[0] = "Extracting";
 
         /* Draw Text */
         // calculate offset for the top line
@@ -121,7 +117,7 @@ public class MCEFDownloaderMenu extends Screen {
 
     @Override
     public void tick() {
-        if (listener.isDone() || listener.isFailed()) {
+        if (MCEFDownloadListener.INSTANCE.isDone() || MCEFDownloadListener.INSTANCE.isFailed()) {
             onClose();
             Minecraft.getInstance().setScreen(menu);
         }

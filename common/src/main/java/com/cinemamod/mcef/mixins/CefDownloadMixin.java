@@ -96,23 +96,28 @@ public class CefDownloadMixin {
             // We will compare this with mcef-libraries/<platform>.tar.gz.sha256
             // If the contents of the files differ (or it doesn't exist locally), we know we need to redownload JCEF
             try {
-                downloadJcefBuild = !downloader.downloadJavaCefChecksum(MCEFDownloadListener.INSTANCE);
+                downloadJcefBuild = !downloader.downloadJavaCefChecksum();
             } catch (IOException e) {
                 e.printStackTrace();
                 MCEFDownloadListener.INSTANCE.setFailed(true);
                 return;
             }
 
+            // Ensure the mcef-libraries directory exists
+            // If not, we want to try redownloading
+            File mcefLibrariesDir = new File(System.getProperty("mcef.libraries.path"));
+            downloadJcefBuild |= mcefLibrariesDir.exists();
+
             if (downloadJcefBuild && !settings.isSkipDownload()) {
                 try {
-                    downloader.downloadJavaCefBuild(MCEFDownloadListener.INSTANCE);
+                    downloader.downloadJavaCefBuild();
                 } catch (IOException e) {
                     e.printStackTrace();
                     MCEFDownloadListener.INSTANCE.setFailed(true);
                     return;
                 }
 
-                downloader.extractJavaCefBuild(true, MCEFDownloadListener.INSTANCE);
+                downloader.extractJavaCefBuild(true);
             }
 
             MCEFDownloadListener.INSTANCE.setDone(true);
