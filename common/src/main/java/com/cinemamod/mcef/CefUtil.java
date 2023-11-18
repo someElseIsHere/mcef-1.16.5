@@ -20,7 +20,6 @@
 
 package com.cinemamod.mcef;
 
-import net.minecraft.client.Minecraft;
 import org.cef.CefApp;
 import org.cef.CefClient;
 import org.cef.CefSettings;
@@ -106,14 +105,6 @@ final class CefUtil {
 
         cefAppInstance = CefApp.getInstance(cefSwitches, cefSettings);
         cefClientInstance = cefAppInstance.createClient();
-
-        cefAppInstance.macOSTerminationRequestRunnable = new Runnable() {
-            @Override
-            public void run() {
-                shutdown();
-                Minecraft.getInstance().stop();
-            }
-        };
 
         return init = true;
     }
