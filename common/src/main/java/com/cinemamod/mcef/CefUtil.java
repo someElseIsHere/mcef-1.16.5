@@ -47,9 +47,8 @@ final class CefUtil {
 
     private static final Path CACHE_PATH = Minecraft.getInstance().gameDirectory
             .toPath()
-            .resolve("config")
-            .resolve("mcef")
-            .resolve("cache");
+            .resolve("mods")
+            .resolve("mcef-cache");
 
     private static void setUnixExecutable(File file) {
         Set<PosixFilePermission> perms = new HashSet<>();
