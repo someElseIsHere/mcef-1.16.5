@@ -41,11 +41,13 @@ public class MCEFSettings {
     private boolean skipDownload;
     private String downloadMirror;
     private String userAgent;
+    private boolean useCache;
 
     public MCEFSettings() {
         skipDownload = false;
         downloadMirror = "https://mcef-download.cinemamod.com";
         userAgent = null;
+        useCache = true;
     }
 
     public boolean isSkipDownload() {
@@ -75,6 +77,10 @@ public class MCEFSettings {
         saveAsync();
     }
 
+    public boolean isUsingCache() {
+        return useCache;
+    }
+
     public void saveAsync() {
         CompletableFuture.runAsync(() -> {
             try {
@@ -98,6 +104,7 @@ public class MCEFSettings {
         properties.setProperty("skip-download", String.valueOf(skipDownload));
         properties.setProperty("download-mirror", String.valueOf(downloadMirror));
         properties.setProperty("user-agent", String.valueOf(userAgent));
+        properties.setProperty("use-cache", String.valueOf(useCache));
 
         try (FileOutputStream output = new FileOutputStream(file)) {
             properties.store(output, null);
@@ -121,6 +128,7 @@ public class MCEFSettings {
             skipDownload = Boolean.parseBoolean(properties.getProperty("skip-download"));
             downloadMirror = properties.getProperty("download-mirror");
             userAgent = properties.getProperty("user-agent");
+            useCache = Boolean.parseBoolean(properties.getProperty("use-cache"));
         } catch (Exception e) {
             // Delete and re-create the file if there was a parsing error
             if (deleteRetries++ > 20)
