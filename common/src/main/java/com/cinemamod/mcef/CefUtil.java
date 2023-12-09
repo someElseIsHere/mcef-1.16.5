@@ -100,7 +100,7 @@ final class CefUtil {
 
         CefSettings cefSettings = new CefSettings();
         cefSettings.windowless_rendering_enabled = true;
-        cefSettings.cache_path = CACHE_PATH.toString();
+        if (settings.isUsingCache()) cefSettings.cache_path = CACHE_PATH.toString();
         cefSettings.background_color = cefSettings.new ColorType(0, 255, 255, 255);
         // Set the user agent if there's one defined in MCEFSettings
         if (!Objects.equals(settings.getUserAgent(), "null")) {
