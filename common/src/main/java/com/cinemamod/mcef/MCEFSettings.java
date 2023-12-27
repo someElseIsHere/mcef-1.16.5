@@ -81,6 +81,11 @@ public class MCEFSettings {
         return useCache;
     }
 
+    public void setUseCache(boolean useCache) {
+        this.useCache = useCache;
+        saveAsync();
+    }
+
     public void saveAsync() {
         CompletableFuture.runAsync(() -> {
             try {
