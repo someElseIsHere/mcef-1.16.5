@@ -8,4 +8,4 @@ pluginManagement {
 }
 
 rootProject.name = 'mcef'
-include('common', 'fabric', 'forge')
+include('common', 'fabric', 'neoforge')

@@ -57,7 +57,7 @@ publishing {
         mavenJava(MavenPublication) {
             from components.java
             groupId = 'com.cinemamod'
-            artifactId = 'mcef-forge'
+            artifactId = 'mcef-neoforge'
             version = mcef_version
         }
     }
