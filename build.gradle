@@ -43,7 +43,6 @@ repositories {}
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.officialMojangMappings()
-    // mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     forge "net.minecraftforge:forge:${project.forge_version}"
 }
 
@@ -68,7 +67,11 @@ java {
     withSourcesJar()
 }
 
+processResources.dependsOn(processJcefResources)
+
 jar {
+    from sourceSets.jcef.output.classesDirs
+    from sourceSets.jcef.output.resourcesDir
     manifest {
         attributes([
                 "Specification-Title"     : project.mod_id,
