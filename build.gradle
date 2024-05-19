@@ -1,88 +1,93 @@
 plugins {
-    id 'fabric-loom' version "${fabric_loom_version}" apply false
+    id "dev.architectury.loom" version "1.5-SNAPSHOT"
+    id "maven-publish"
 }
 
-tasks.register('cloneJcef', Exec) {
-    commandLine 'git', 'submodule', 'update', '--init', '--recursive', 'common/java-cef'
+base {
+    archivesName = project.archives_base_name
 }
 
-// https://gist.github.com/JonasGroeger/7620911
-def getCheckedOutGitCommitHash(Project mcefParent) {
-    def gitFolder = "$mcefParent.projectDir/.git/modules/common/java-cef/"
-    def takeFromHash = 40
-    /*
-     * '.git/HEAD' contains either
-     *      in case of detached head: the currently checked out commit hash
-     *      otherwise: a reference to a file containing the current commit hash
-     */
-    def gitHeadFile = new File(gitFolder + "HEAD");
-    if (gitHeadFile.exists()) {
-        def head = gitHeadFile.text.split(":") // .git/HEAD
-        def isCommit = head.length == 1 // e5a7c79edabbf7dd39888442df081b1c9d8e88fd
-        // def isRef = head.length > 1     // ref: refs/heads/master
+version = project.mod_version
+group = project.maven_group
 
-        if (isCommit) return head[0].trim().take(takeFromHash) // e5a7c79edabb
+sourceSets {
+    jcef {
+        java {
+            srcDir "java-cef/java"
+            exclude "**/tests/**"
+        }
+    }
 
-        def refHead = new File(gitFolder + head[1].trim()) // .git/refs/heads/master
-        refHead.text.trim().take takeFromHash
-    } else {
-        return ""
+    main {
+        compileClasspath += jcef.output
+        runtimeClasspath += jcef.output
     }
 }
 
-tasks.register('publishMaven', GradleBuild) {
-    group = 'mcef'
-    tasks = [
-          ':common:publish',
-          ':fabric:publish',
-          ':neoforge:publish'
-    ]
+java {
+    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-tasks.register('publishCurseforge', GradleBuild) {
-    group = 'mcef'
-    tasks = [
-            ':common:clean',
-            ':neoforge:clean',
-            ':fabric:clean',
-            ':neoforge:curseforge',
-            ':fabric:curseforge'
-    ]
+loom {
+    silentMojangMappingsLicense()
+
+    forge {
+        mixinConfigs = [
+                "mcef.mixins.json"
+        ]
+    }
 }
 
-tasks.register('fabricClient', GradleBuild) {
-    group = 'mcef'
-    tasks = [
-          ':fabric:runClient'
-    ]
+repositories {}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    // mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    forge "net.minecraftforge:forge:${project.forge_version}"
 }
 
-tasks.register('forgeClient', GradleBuild) {
-    group = 'mcef'
-    tasks = [
-          ':neoforge:runClient'
-    ]
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("META-INF/mods.toml") {
+        expand "version": project.version
+    }
 }
 
-tasks.register('fabricServer', GradleBuild) {
-    group = 'mcef'
-    tasks = [
-          ':fabric:runServer'
-    ]
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+
+    def targetVersion = 8
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.release = targetVersion
+    }
 }
 
-tasks.register('forgeServer', GradleBuild) {
-    group = 'mcef'
-    tasks = [
-          ':neoforge:runServer'
-    ]
+java {
+    withSourcesJar()
 }
 
-tasks.register('cleanAll', GradleBuild) {
-    group = 'mcef'
-    tasks = [
-          ':common:clean',
-          ':fabric:clean',
-          ':neoforge:clean',
-    ]
+jar {
+    manifest {
+        attributes([
+                "Specification-Title"     : project.mod_id,
+                "Specification-Vendor"    : project.mod_author,
+                "Specification-Version"   : "1",
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : version,
+                "Implementation-Vendor"   : project.mod_author,
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+
+    repositories {}
 }
